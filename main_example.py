@@ -5,9 +5,12 @@ from time import sleep
 import RPi.GPIO as GPIO
 from mfrc522 import SimpleMFRC522
 from gpiozero import Buzzer
+
 kp = keypad()
 buzzer = Buzzer(26)
 reader = SimpleMFRC522()
+uid_test = "73de2a29"
+BASE_API_URL = "keycabinet.cspc.edu.ph/api/"
 
 key = 0
 def digit():
@@ -50,9 +53,11 @@ def displayMain():
         elif key == 1:
             key = None
             selectKey()
+            return
         elif key == 2:
             key = None
             scanID()
+            return
 
 def selectKey():
     set_active_state("displaySelectKey")
@@ -71,10 +76,17 @@ def selectKey():
 
 def scanID():
     set_active_state("displayScanID")
-    key = digit()
-    while key != 0:
-        idScanner()
-        return
+    uid = idScanner()
+    buzzer.on()
+    sleep(0.05)
+    buzzer.off()
+    if uid == "73de2a29":
+        set_active_state("displayConfirm")
+        sleep(1)
+    else: 
+        set_active_state("displayReject")
+        sleep(1)
+    return
     
 
 def idScanner():
