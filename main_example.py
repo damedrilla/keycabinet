@@ -29,6 +29,7 @@ def main():
         buzzer.on()
         sleep(0.05)
         buzzer.off()
+        print(key)
         if key == 1:
             key = None
             displayMain()
@@ -98,5 +99,6 @@ def idScanner():
 # Start the threads
 t1 = Thread(target=lcdScreenController)
 t2 = Thread(target=main)
+
 t1.start()
 t2.start()
